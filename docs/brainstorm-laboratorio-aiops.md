@@ -44,7 +44,7 @@ O guia **não menciona** stack de observabilidade, gerador de tráfego nem ferra
 - **Não existem** Dockerfile, Compose, manifests Kubernetes, pipeline nem IaC.
 - Ferramentas instaladas: `docker`, `kind`, `kubectl` e `helm`. Não há `minikube` nem `k3d`.
 - Checklist do guia rodado em 2026-10-18: git 2.43.0, npm 10.9.8, Claude Code 2.1.302, Docker 28.0.1 (Engine nativo no Ubuntu, não Docker Desktop), Compose v2.33.1, kind v0.30.0 (nenhum cluster criado), kubectl v1.37.1.
-- Pendências do checklist: **Node v22.22.3** (o guia pede 24 LTS) e **`docker login` aparentemente não feito** (`auths` vazio). As duas são ação do usuário.
+- Checklist concluído: `docker login` feito (conta `jpetroniom`). O Node 24.22.0 está instalado via nvm, mas o padrão continua 22 (`nvm use v22.22.3` no `~/.bashrc`) por escolha do usuário. Usar `nvm use 24` nos terminais do curso.
 
 ### Restrições do ambiente
 
@@ -105,6 +105,7 @@ Decisão: **só registrar, sem alterar o código** (ver Decisões).
 | Versão do Node | 24 LTS | Referência do guia | Verificado (guia, 2026-10-18) |
 | Momento da implementação | Antes do evento, no máximo a etapa 1 (Dockerfile + Compose). Etapas 2–4 só no ou depois do hands-on | O guia pede para não criar o cluster antes, e o projeto é construído junto com a turma | Decidido (usuário aprovou a direção revisada) |
 | Papel destes documentos | Estudo prévio; serão comparados com o que o curso construir | Evitar conflito com o hands-on | Decidido |
+| Exposição do app no kind | Service NodePort na porta 30080, mapeada para o host via `extraPortMappings` do kind | Escolha do usuário ("localmente use node port"). No kind, um NodePort só chega ao host com mapeamento explícito | Decidido (NodePort); porta 30080 Inferida |
 | Stack de observabilidade (no curso) | Desconhecida; desenho enxuto (ADR 003) segue como premissa | O guia não menciona | Em aberto |
 
 ### Alternativas descartadas
@@ -167,7 +168,7 @@ Com a stack completa, o total ficaria em ~2,2–2,8 GB contra ~3 GB livres. Daí
 |---|---|---|
 | Stack de observabilidade e ferramenta de AIOps do curso | O guia de preparação não menciona | Hands-on do evento |
 | Divergências entre o curso e os ADRs 002/003 | Os ADRs foram escritos antes do evento | Depois do evento: comparar e criar ADRs que substituam estes onde houver divergência |
-| Node 24 e `docker login` | Pendências do checklist do guia | O usuário roda `nvm install 24 && nvm use 24` e `docker login` |
+| Configuração do kind com `extraPortMappings` (30080 e portas da stack de observabilidade) | O cluster é criado no evento | Conferir no hands-on se o curso expõe por NodePort, Ingress ou port-forward |
 | Correções de telemetria no app | Decidido só registrar (inferido) | Etapa 3, quando a telemetria enganar um alerta, ou o curso abordar o tema |
 | k6 vs Locust | Não discutido | Início da etapa 2 |
 | Abordagem de AIOps (ML, LLM, K8sGPT) | Depende do aprendizado nas etapas 2 e 3 | Fim da etapa 3 |

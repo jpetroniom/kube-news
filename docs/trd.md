@@ -62,6 +62,11 @@ kube-news/
 | 1 | Docker Compose: app + PostgreSQL | ADR 001 |
 | 2 | kind: app (2 réplicas, manifests puros) + PostgreSQL + stack de observabilidade enxuta | ADR 002, ADR 003 (proposto) |
 
+Exposição local:
+
+- **Compose:** porta publicada direto, `localhost:8080`.
+- **kind:** Service **NodePort na porta 30080**, mapeada para o host via `extraPortMappings` na configuração do cluster. Sem esse mapeamento, o NodePort não chega ao host, porque os nós do kind são containers Docker.
+
 Compose e kind **nunca rodam ao mesmo tempo** (RAM). Antes do evento, implementar no máximo a etapa 1. O cluster é construído no hands-on.
 
 ---
