@@ -94,14 +94,37 @@ Acesse a aplicação em [http://localhost:8080](http://localhost:8080). Para par
 
 ### População de Dados de Exemplo
 
-Utilize o arquivo `popula-dados.http` para inserir notícias de exemplo:
+O arquivo `popula-dados.http` (porta 8080, a mesma do Compose) pode ser enviado com o REST Client do VS Code ou com `curl`, extraindo o corpo JSON do arquivo:
 
 ```bash
-# Com uma ferramenta como o REST Client no VS Code ou curl
-POST http://localhost:8080/api/post
-Content-Type: application/json
-# Conteúdo do arquivo popula-dados.http
+awk 'f{print} /^Content-Type/{getline; f=1}' popula-dados.http \
+  | curl -s -X POST localhost:8080/api/post -H 'Content-Type: application/json' --data @-
 ```
+
+### Validação do ambiente Compose
+
+Procedimento usado para validar a etapa 1 (não rode junto com o cluster kind):
+
+```bash
+docker compose up -d --build
+docker compose ps                                  # app Up e postgres (healthy)
+
+for p in / /health /ready /metrics; do
+  echo "$p $(curl -s -o /dev/null -w '%{http_code}' localhost:8080$p)"
+done                                               # esperado: 200 nos quatro
+
+curl -s localhost:8080/metrics | grep http_request_duration_seconds   # métricas Prometheus
+```
+
+Persistência dos dados:
+
+```bash
+docker compose down && docker compose up -d        # notícias continuam listadas
+docker compose down -v && docker compose up -d     # volume apagado: lista vazia
+docker compose down -v                             # limpeza
+```
+
+Resultado da validação (2026-10-18): todos os endpoints responderam 200, a carga de `popula-dados.http` funcionou, os dados sobreviveram ao `down`/`up` e foram apagados por `down -v`.
 
 ## 📊 Monitoramento e Health Checks
 
