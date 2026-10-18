@@ -82,6 +82,16 @@ Para configurar a aplicação, defina as seguintes variáveis de ambiente:
    ```
 5. Acesse a aplicação em [http://localhost:8080](http://localhost:8080)
 
+### Execução com Docker Compose
+
+Sobe a aplicação e um PostgreSQL já configurados (ver `docs/adrs/001-containerizacao-docker-compose.md`):
+
+```bash
+docker compose up -d --build
+```
+
+Acesse a aplicação em [http://localhost:8080](http://localhost:8080). Para parar, use `docker compose down` (acrescente `-v` para apagar os dados do banco).
+
 ### População de Dados de Exemplo
 
 Utilize o arquivo `popula-dados.http` para inserir notícias de exemplo:
